@@ -11,11 +11,17 @@ class MoviesController < ApplicationController
   
   def create
    params.permit!
-   @movie = Movie.create!(params[:movie])
-   redirect_to movies_path
+   @movie = Movie.new(params[:movie])
+   if @movie.save
+       flash[:notice]="#{@movie.title} successfully saved!"
+       redirect_to movies_path
+   else
+       render 'new' #thinking redirect_to new_movie_path might also work
+   end
   end
 
   def new
+      @movie=Movie.new
       #default :render 'new' template
   end
    
@@ -26,9 +32,12 @@ class MoviesController < ApplicationController
   def update
    @movie = Movie.find params[:id]
    params.permit!
-   @movie.update_attributes!(params[:movie])
-   flash[:notice] = "#{@movie.title} was successfully updated."
-   redirect_to movie_path(@movie)
+   if @movie.update_attributes(params[:movie])
+       flash[:notice] = "#{@movie.title} was successfully updated."
+       redirect_to movie_path(@movie)
+   else
+       render 'edit'
+   end
   end
   
   def destroy
