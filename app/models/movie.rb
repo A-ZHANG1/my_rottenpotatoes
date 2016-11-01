@@ -1,4 +1,6 @@
 class Movie < ActiveRecord::Base
+  has_many :reviews
+  has_many :moviegoers, :through => :reviews
   # attr_accessor :title, :rating, :description, :release_date
   def self.all_ratings ; %w[G PG PG-13 R NC-17] ; end #  shortcut: array of strings
   
